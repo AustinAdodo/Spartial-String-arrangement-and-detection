@@ -1,0 +1,1 @@
+# Spartial String arrangement and detection

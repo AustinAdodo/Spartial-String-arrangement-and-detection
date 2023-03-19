@@ -1,4 +1,8 @@
-﻿namespace Spartial_String_arrangement_and_detection
+﻿using System.Net.Http.Headers;
+using System.Linq;
+using System.Collections.Generic;
+
+namespace Spartial_String_arrangement_and_detection
 {
     internal class Program
     {
@@ -23,32 +27,34 @@
         }
         public static string Check(string s)
         {
-            string result = "invalid";
-            string s2 = s.Replace("()", "");  
-            //string[] arr = Array.ConvertAll(s.ToCharArray(), a => a.ToString());
-            List<string> test = new List<string>(); int z = 0;
+            string result = "invalid"; int k = 0; string s2 = "";
+            if (s.Length % 2 != 0) return result;
+            if (s == "()") { result = "valid"; return result; }
+            if (s.Length > 2) { s2 = s.Replace("()", ""); }
+            if (s2.Length % 2 == 0) { k = s2.Length / 2; }
+            if (s2.Length % 2 != 0) { return result; }
+            string s21 = s.Substring(0, k);
+            string s22 = s.Substring(k + 1, k);
+            List<string> test = new List<string>();
             List<string> test1 = new List<string>();
-            int a = s.Split('[').Length - 1;
-            int a1 = s.Split(']').Length - 1;
+            //int a = s.Split('[').Length - 1;
+            //int a1 = s.Split(']').Length - 1;
             int b = s.Split('(').Length - 1;
             int b1 = s.Split(')').Length - 1;
             int c = s2.Split('(').Length - 1;
             int c1 = s2.Split(')').Length - 1;
             List<int> chk = new List<int>();
-            for (int i = 0; i < s.Length; i++)
-            {
-                if (i + 1 <= s.Length - 1 && s[i] == '(' && s[i + 1] == ')' && i + 1 <= s.Length - 1) chk.Add(1);
-                if (i + 1 <= s.Length - 1 && s[i] == '[' && s[i + 1] == ']' && i + 1 <= s.Length - 1) chk.Add(1);
-                //handle composites.
-                if (s[0] == ')' || s[0] == ']' || s[s.Length - 1] == '(' || s[s.Length - 1] == '[') chk.Add(0);
-            }
-            if (s2.All(a => a == ')' && s2.IndexOf(a) < s2.IndexOf('('))) return result;
-            if (a != a1) return result;
+            //check if all ')' come before '(' 
+            if (s[0] == ')' || s[0] == ']' || s[s.Length - 1] == '(' || s[s.Length - 1] == '[') return result;
+            //if (s2.All(a => a == ')' && (s2.IndexOf(a) < s2.IndexOf('(')))) return result;
+            //if (a != a1) return result;
             if (b != b1) return result;
             if (c != c1) return result;
-            if (!chk.Contains(0)) return "valid";
+            if (s22 != new string(')', s2.Length)) return result;
+            result = "valid";
             return result;
         }
+        //Max Distance betweeen charaacters.
         static int MaxDistancebtwCharacters(string s)
         {
             List<string> arr = Array.ConvertAll(s.ToCharArray(), a => a.ToString()).ToList();
@@ -65,13 +71,127 @@
             }
             return results.Values.Max() - 1;
         }
+        static int swap(int num)
+        {
+            int b = 0;
+            string a = string.Join("", num.ToString().Reverse());
+            int result = (int.TryParse(a, out b)) ? b : num;
+            return result;
+        }
+
+        static bool qual(int[] numbers)
+        {
+            List<int> lis = numbers.ToList();
+            bool result = numbers.Zip(lis.Skip(1), (a, b) => a.CompareTo(b) < 0)
+        .All(b => b);
+            return result;
+        }
+
+        static bool solution1(int[] numbers)
+        {
+            bool result = false;
+            if (qual(numbers)) return true;
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                if (i + 1 <= numbers.Length - 1 && numbers[i] > numbers[i + 1]) { numbers[numbers.ToList().IndexOf(numbers[i])] = swap(numbers[i]); }
+                if (qual(numbers)) return true;
+            }
+            return result;
+        }
         static void Main(string[] args)
         {
-            string s = "((((()))))()()(())";
-            string s1 = "))))((((()))))))";
-            string test = "abstqayqjktla";
-            //Console.WriteLine(Check(s));
+            int[] numbers = new int[] { 1000, 2, 3, 4, 5 };
+            Console.Write(string.Join(" ", numbers));
+            Console.Write("\\n");
+            Console.WriteLine(solution1(numbers));
+            //string s = "((((()))))()()(())";
+            //string s1 = "()))))((((()))))))";
+            //string test = "abstqayqjktla";
+            //Console.WriteLine(Check(s1));
             //Console.Write(MaxDistancebtwCharacters(test));
         }
     }
+
+    public class Node
+    {
+        public int Value;
+        public Node Left;
+        public Node Right;
+    }
+
+    public class BST
+    {
+        public Node Root;
+
+        public int LongestPathOnLeft()
+        {
+            int maxLength = 0;
+            LongestPathOnLeftHelper(Root, ref maxLength);
+            return maxLength;
+        }
+
+        private void LongestPathOnLeftHelper(Node node, ref int maxLength)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            // Check if the left path is longer
+            int leftLength = PathLength(node.Left);
+            if (leftLength > maxLength)
+            {
+                maxLength = leftLength;
+            }
+
+            // Recurse on the left child
+            LongestPathOnLeftHelper(node.Left, ref maxLength);
+
+            // Recurse on the right child
+            LongestPathOnLeftHelper(node.Right, ref maxLength);
+        }
+
+        public int LongestPathOnRight()
+        {
+            int maxLength = 0;
+            LongestPathOnRightHelper(Root, ref maxLength);
+            return maxLength;
+        }
+
+        private void LongestPathOnRightHelper(Node node, ref int maxLength)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            // Check if the right path is longer
+            int rightLength = PathLength(node.Right);
+            if (rightLength > maxLength)
+            {
+                maxLength = rightLength;
+            }
+
+            // Recurse on the right child
+            LongestPathOnRightHelper(node.Right, ref maxLength);
+
+            // Recurse on the left child
+            LongestPathOnRightHelper(node.Left, ref maxLength);
+        }
+
+        private int PathLength(Node node)
+        {
+            if (node == null)
+            {
+                return 0;
+            }
+
+            int leftPathLength = PathLength(node.Left);
+            int rightPathLength = PathLength(node.Right);
+
+            // Return the maximum path length between left and right paths
+            return 1 + Math.Max(leftPathLength, rightPathLength);
+        }
+    }
+
 }

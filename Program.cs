@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace Spartial_String_arrangement_and_detection
 {
@@ -90,6 +91,7 @@ namespace Spartial_String_arrangement_and_detection
         static bool solution1(int[] numbers)
         {
             bool result = false;
+         
             if (qual(numbers)) return true;
             for (int i = 0; i < numbers.Length; i++)
             {
@@ -98,12 +100,22 @@ namespace Spartial_String_arrangement_and_detection
             }
             return result;
         }
-        static void Main(string[] args)
+
+        static void Main1(string[] args)
         {
-            int[] numbers = new int[] { 1000, 2, 3, 4, 5 };
-            Console.Write(string.Join(" ", numbers));
-            Console.Write("\\n");
-            Console.WriteLine(solution1(numbers));
+            int N = int.Parse(Console.ReadLine());
+            for (int i = 0; i < N; i++)
+            {
+                int E = int.Parse(Console.ReadLine());
+            }
+
+            // Write an answer using Console.WriteLine()
+            // To debug: Console.Error.WriteLine("Debug messages...");
+
+            Console.WriteLine("answer");
+        }
+        static void Main(string[] args) 
+        {
             //string s = "((((()))))()()(())";
             //string s1 = "()))))((((()))))))";
             //string test = "abstqayqjktla";

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Spartial_String_arrangement_and_detection
 {
@@ -91,7 +92,7 @@ namespace Spartial_String_arrangement_and_detection
         static bool solution1(int[] numbers)
         {
             bool result = false;
-         
+
             if (qual(numbers)) return true;
             for (int i = 0; i < numbers.Length; i++)
             {
@@ -101,26 +102,86 @@ namespace Spartial_String_arrangement_and_detection
             return result;
         }
 
-        static void Main1(string[] args)
+        public static IList<string> CommonChars(string[] words)
         {
-            int N = int.Parse(Console.ReadLine());
-            for (int i = 0; i < N; i++)
+            Dictionary<char, int> reg = new Dictionary<char, int>();
+            string s = "";//["bella","label","roller"] -> [e,l,l]  //["cool","lock","cook"] -> [c,o]
+            foreach (var item in words)
             {
-                int E = int.Parse(Console.ReadLine());
+                for (int i = 0; i < item.Length; i++)
+                {
+                    if (words.ToList().IndexOf(item) == 0 && reg.ContainsKey(item[i])) reg[item[i]]++;
+                    if (words.ToList().IndexOf(item) == 0 && !reg.ContainsKey(item[i])) reg.Add(item[i], 1);
+                }
             }
-
-            // Write an answer using Console.WriteLine()
-            // To debug: Console.Error.WriteLine("Debug messages...");
-
-            Console.WriteLine("answer");
+            for (int i = 1; i < words.Length; i++)
+            {
+                foreach (KeyValuePair<char, int> kvp in reg)
+                {
+                    int check = words[i].Split(kvp.Key).Length - 1;
+                    bool check1 = check > 0 && check < kvp.Value;
+                    if (words.ToList().IndexOf(words[i]) > 0 && check == 0) reg.Remove(kvp.Key);
+                    if (words.ToList().IndexOf(words[i]) > 0 && check1 && reg.ContainsKey(kvp.Key)) reg[kvp.Key] = check;
+                }
+            }
+            foreach (KeyValuePair<Char, int> kvp in reg)
+            {
+                s += new string(kvp.Key, kvp.Value);
+            }
+            return Array.ConvertAll(s.ToCharArray(), s => s.ToString());
         }
-        static void Main(string[] args) 
+
+        public static string decryptPassword(string s)
+        {
+            string result = ""; int b = 0;
+            string[] nums = Array.ConvertAll(s.ToCharArray(), s => s.ToString()).Where(a => int.TryParse(a, out b) == true && a != "0").ToArray();
+            int check = 1;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (int.TryParse(s[i].ToString(), out b) == true && s[i] != '0') continue;
+                if (i > 1 && i + 2 <= s.Length - 1 && s[i + 2] == '*') result += s[i + 1].ToString().ToLower() + s[i].ToString().ToUpper();
+                if (s[i] == '*') continue;
+                if (s[i] == '0') { result += nums[nums.Length - check]; check++; }
+                else { result += s[i]; }
+            }
+            return result;
+        }
+
+        public static List<long> findSum(List<int> numbers, List<List<int>> queries)
+        {
+            int zeros = 0;// 20.30.0,10
+            List<int> temp = new List<int>();
+            int ans = 0;
+            List<long> result = new List<long>();
+            for (int i = 0; i < queries.Count; i++)
+            {
+                numbers.Where(x => queries[i][0] - 1 >= 0 && queries[i][1] - 1 <= numbers.Count - 1 &&
+                numbers.IndexOf(x) >= queries[i][0] - 1 && numbers.IndexOf(x) <= queries[i][1] - 1).ToList();
+
+                //if (queries[i][0] - 1 >= 0 && queries[i][1] - 1 <= numbers.Count - 1)
+                //{
+                //    for (int j = queries[i][0] - 1; j <= queries[i][1] - 1; j++)
+                //    {
+                //        temp.Add(numbers[j]);
+                //    }
+                //}
+                zeros = numbers.Where(x => x == 0).Count();
+                ans = temp.Sum() + (zeros * queries[1][2]);
+                result.Add(ans);
+                temp.Clear();
+            }
+            return result;
+        }
+
+        static void Main(string[] args)
         {
             //string s = "((((()))))()()(())";
             //string s1 = "()))))((((()))))))";
             //string test = "abstqayqjktla";
             //Console.WriteLine(Check(s1));
             //Console.Write(MaxDistancebtwCharacters(test));
+            string[] words = new string[] { "cool", "lock", "cook" };
+            CommonChars(words);
         }
     }
 

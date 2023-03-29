@@ -149,24 +149,16 @@ namespace Spartial_String_arrangement_and_detection
 
         public static List<long> findSum(List<int> numbers, List<List<int>> queries)
         {
-            int zeros = 0;// 20.30.0,10
+            int zeros = 0;// 20.30,0,10
             List<int> temp = new List<int>();
             int ans = 0;
             List<long> result = new List<long>();
             for (int i = 0; i < queries.Count; i++)
             {
-                numbers.Where(x => queries[i][0] - 1 >= 0 && queries[i][1] - 1 <= numbers.Count - 1 &&
-                numbers.IndexOf(x) >= queries[i][0] - 1 && numbers.IndexOf(x) <= queries[i][1] - 1).ToList();
-
-                //if (queries[i][0] - 1 >= 0 && queries[i][1] - 1 <= numbers.Count - 1)
-                //{
-                //    for (int j = queries[i][0] - 1; j <= queries[i][1] - 1; j++)
-                //    {
-                //        temp.Add(numbers[j]);
-                //    }
-                //}
-                zeros = numbers.Where(x => x == 0).Count();
-                ans = temp.Sum() + (zeros * queries[1][2]);
+                temp = numbers.Where((x,r) => queries[i][0] - 1 >= 0 && queries[i][1] - 1 <= numbers.Count - 1 &&
+                r >= queries[i][0] - 1 && r <= queries[i][1] - 1).ToList();
+                zeros = temp.Where(x => x == 0).Count();
+                ans = temp.Sum() + (zeros * queries[i][2]);
                 result.Add(ans);
                 temp.Clear();
             }
@@ -180,8 +172,13 @@ namespace Spartial_String_arrangement_and_detection
             //string test = "abstqayqjktla";
             //Console.WriteLine(Check(s1));
             //Console.Write(MaxDistancebtwCharacters(test));
-            string[] words = new string[] { "cool", "lock", "cook" };
-            CommonChars(words);
+            //string[] words = new string[] { "cool", "lock", "cook" };
+            //CommonChars(words);
+            List<int> numbers = new List<int>() { 20, 30, 0, 10 };
+            List<List<int>> queries = new();
+            queries.Add(new List<int>() { 1, 3, 10 });
+            queries.Add(new List<int>() { 2, 4, 6 });
+            findSum(numbers,queries);
         }
     }
 

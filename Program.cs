@@ -200,9 +200,8 @@ namespace Spartial_String_arrangement_and_detection
             //queries.Add(new List<int>() { 2, 4, 6 });
             //findSum(numbers, queries);
             //Console.Write( balancedStringSplit("LLLLRRRR"));
-            string s = "abcdefghijklm";
-            //string s = "abcde";
-            Console.Write(String.Join(" ",Additional_Solutions.ChunkIter(s,4)));
+            //230
+            //Console.Write(String.Join(" ",Additional_Solutions.Withdraw(354)));
         }
     }
 

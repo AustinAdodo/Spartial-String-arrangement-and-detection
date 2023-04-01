@@ -11,24 +11,38 @@ namespace Spartial_String_arrangement_and_detection
 {
     internal class Additional_Solutions
     {
-        //Assume all bills are always available 1000, 
+        //Assume all bills are always available 1000, dic[50] += (amount % 100) / 50;
         public static List<int> Withdraw(int amount)
         {
-            int a, b, c;
             List<int> result = new List<int>();
-            a = (amount > 100) ? (amount / 100) : 0;
-            result.Add(a);
-            //b = (amount % 100 > 50) ? Convert.ToInt32(Math.Floor(Convert.ToDecimal(amount % 100 / 50))) : 0;
-            if (amount % 100 > 50 && (amount % 100) % 50 == 0)
+            Dictionary<int, int> dic = new Dictionary<int, int>() { { 100, 0 }, { 50, 0 }, { 20, 0 } };
+            if (amount >= 100) { dic[100] += amount / 100; amount %= 100; }
+            if (amount >= 50 && amount < 100) { dic[50] += (amount / 50); amount %= 50; }
+            if (amount < 50 && amount > 0) { dic[20] += (amount / 20); amount %= 20; }
+            //check if theres a remainder at the end.
+            if (amount != 0 && dic[50] > 0)
             {
-                result.Add((amount % 100) % 50);
+                dic[50]--; dic[20] = (50 + amount + (dic[20]) * 20) / 20;
+                foreach (var item in dic)
+                {
+                    result.Add(item.Value);
+                }
+                return result;
             }
-            if (amount % 100 > 50 && amount % 100 % 50 != 0)
+            if (amount != 0 && dic[50] == 0)
             {
-                result.Add(amount % 100 % 50);
+                dic[100]--; dic[50]++; dic[20] = (50 + amount + (dic[20]) * 20) / 20;
+                foreach (var item in dic)
+                {
+                    result.Add(item.Value);
+
+                }
+                return result;
             }
-            c = (b % 50 > 20) ? Convert.ToInt32(Math.Floor(Convert.ToDecimal(b % 50 / 20))) : 0;
-            result.Add(c);
+            foreach (var item in dic)
+            {
+                result.Add(item.Value);
+            }
             return result;
         }
         //complex chunks.

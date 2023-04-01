@@ -134,12 +134,17 @@ namespace Spartial_String_arrangement_and_detection
         public static string decryptPassword(string s)
         {
             string result = ""; int b = 0;
-            string[] nums = Array.ConvertAll(s.ToCharArray(), s => s.ToString()).Where(a => int.TryParse(a, out b) == true && a != "0").ToArray();
+            string[] nums = Array.ConvertAll(s.ToCharArray(), s => s.ToString()).
+                Where(a => int.TryParse(a, out b) == true && a != "0").ToArray();
             int check = 1;
             for (int i = 0; i < s.Length; i++)
             {
                 if (int.TryParse(s[i].ToString(), out b) == true && s[i] != '0') continue;
-                if (i > 1 && i + 2 <= s.Length - 1 && s[i + 2] == '*') result += s[i + 1].ToString().ToLower() + s[i].ToString().ToUpper();
+                if (i > 1 && i + 2 <= s.Length - 1 && s[i + 2] == '*')
+                {
+                    result += s[i + 1].ToString().ToLower() +
+                        s[i].ToString().ToUpper(); i += 2;
+                }
                 if (s[i] == '*') continue;
                 if (s[i] == '0') { result += nums[nums.Length - check]; check++; }
                 else { result += s[i]; }
@@ -155,12 +160,27 @@ namespace Spartial_String_arrangement_and_detection
             List<long> result = new List<long>();
             for (int i = 0; i < queries.Count; i++)
             {
-                temp = numbers.Where((x,r) => queries[i][0] - 1 >= 0 && queries[i][1] - 1 <= numbers.Count - 1 &&
+                temp = numbers.Where((x, r) => queries[i][0] - 1 >= 0 && queries[i][1] - 1 <= numbers.Count - 1 &&
                 r >= queries[i][0] - 1 && r <= queries[i][1] - 1).ToList();
                 zeros = temp.Where(x => x == 0).Count();
                 ans = temp.Sum() + (zeros * queries[i][2]);
                 result.Add(ans);
                 temp.Clear();
+            }
+            return result;
+        }
+
+        public static int balancedStringSplit(string s)
+        {
+
+            int result = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (i + 1 <= s.Length - 1 && 
+                    (s[i].ToString() + s[i + 1].ToString() == "LR" || s[i].ToString() + s[i + 1].ToString() == "RL"))
+                {
+                    result++; i++;
+                }
             }
             return result;
         }
@@ -174,11 +194,15 @@ namespace Spartial_String_arrangement_and_detection
             //Console.Write(MaxDistancebtwCharacters(test));
             //string[] words = new string[] { "cool", "lock", "cook" };
             //CommonChars(words);
-            List<int> numbers = new List<int>() { 20, 30, 0, 10 };
-            List<List<int>> queries = new();
-            queries.Add(new List<int>() { 1, 3, 10 });
-            queries.Add(new List<int>() { 2, 4, 6 });
-            findSum(numbers,queries);
+            //List<int> numbers = new List<int>() { 20, 30, 0, 10 };
+            //List<List<int>> queries = new();
+            //queries.Add(new List<int>() { 1, 3, 10 });
+            //queries.Add(new List<int>() { 2, 4, 6 });
+            //findSum(numbers, queries);
+            //Console.Write( balancedStringSplit("LLLLRRRR"));
+            string s = "abcdefghijklm";
+            //string s = "abcde";
+            Console.Write(String.Join(" ",Additional_Solutions.ChunkIter(s,4)));
         }
     }
 

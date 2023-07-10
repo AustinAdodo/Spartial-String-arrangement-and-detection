@@ -176,7 +176,7 @@ namespace Spartial_String_arrangement_and_detection
             int result = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                if (i + 1 <= s.Length - 1 && 
+                if (i + 1 <= s.Length - 1 &&
                     (s[i].ToString() + s[i + 1].ToString() == "LR" || s[i].ToString() + s[i + 1].ToString() == "RL"))
                 {
                     result++; i++;
@@ -185,8 +185,32 @@ namespace Spartial_String_arrangement_and_detection
             return result;
         }
 
-        static void Main(string[] args)
+        public static List<string> DetectExteriorCells(List<string> grid)
         {
+            List<List<string>> result = new List<List<string>>();
+            List<string> rec = new List<string>();
+            for (int i = 0; i < grid.Count; i++)
+            {
+                rec.Add(grid[i]);
+                if (grid[i].ToString() == "\n") { result.Add(rec); rec.Clear(); }
+            }
+            foreach (var row in result)
+            {
+                for (int i = 0; i < row.Count; i++)
+                {
+                    //if()
+                }
+            }
+            return new List<string>();
+        }
+
+        //public static long[][] spin(long[][] matrix)
+        //{
+        //    // Type your solution here
+        //}
+        //check TakeWhile
+        static void Main(string[] args)
+        {  
             //string s = "((((()))))()()(())";
             //string s1 = "()))))((((()))))))";
             //string test = "abstqayqjktla";

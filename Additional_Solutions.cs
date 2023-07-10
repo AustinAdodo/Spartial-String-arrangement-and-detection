@@ -76,6 +76,7 @@ namespace Spartial_String_arrangement_and_detection
         public static string[] Chunk(string s, int chunks)
         {
             List<string> result = new List<string>();
+            result = ChunkIter(s, chunks).ToList();
             return result.ToArray();
         }
 
